@@ -1,0 +1,37 @@
+The output of your R Markdown code for "Practical Machine Learning - Human Activity Recognition" will be an HTML document containing the results of a human activity classification task using the Random Forest algorithm. This HTML report includes the following key components based on your code:
+
+Main Sections in the Output
+Title and Author
+The report will display "Practical Machine Learning - Human Activity Recognition" by "Tushar Shinde".
+
+Data Loading and Cleaning
+
+Shows dataset dimensions before and after NA removal and dropping identifier columns.
+
+Displays the first 10 columns of data (head).
+
+Data Partitioning
+
+The data is split into training and validation sets (70/30 split).
+
+Model Building
+
+Trains a Random Forest classifier using the caret package with 3-fold cross-validation.
+
+Model summary output, including accuracy and tuning information.
+
+Model Evaluation
+
+Predicts on the validation set.
+
+Outputs a confusion matrix showing model accuracy and error rates.
+
+Variable Importance Plot
+
+Plots the top variable importances contributing to predictions.
+
+Test Predictions
+
+Predicts human activity classes on the test set.
+
+Displays a Markdown table with ProblemID (1–20) and the predicted activity class for each test case.

@@ -1,0 +1,57 @@
+---
+title: "Practical Machine Learning - Human Activity Recognition"
+author: "Tushar Shinde"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(caret)
+library(randomForest)
+library(rpart)
+library(rpart.plot)
+library(corrplot)
+set.seed(123)
+
+train_url <- "[https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv)"
+test_url  <- "[https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv)"
+
+train <- read.csv(train_url)
+test  <- read.csv(test_url)
+
+dim(train)
+head(train[, 1:10])
+
+# Remove columns with mostly NA
+
+train <- train[, colSums(is.na(train)) == 0]
+test <- test[, colSums(is.na(test)) == 0]
+
+# Remove the first 7 identifier columns
+
+train <- train[, -c(1:7)]
+test  <- test[, -c(1:7)]
+
+dim(train)
+
+set.seed(123)
+inTrain <- createDataPartition(train$classe, p=0.7, list=FALSE)
+training <- train[inTrain, ]
+validation <- train[-inTrain, ]
+
+controlRF <- trainControl(method="cv", number=3, verboseIter=FALSE)
+modelRF <- train(classe ~ ., data=training, method="rf", trControl=controlRF)
+modelRF
+
+predRF <- predict(modelRF, validation)
+confMatrix <- confusionMatrix(predRF, validation$classe)
+confMatrix
+
+varImpPlot(modelRF$finalModel, main="Top Variable Importance (Random Forest)")
+
+finalPred <- predict(modelRF, test)
+finalPred
+
+results <- data.frame(ProblemID = 1:20, PredictedClasse = finalPred)
+knitr::kable(results, caption = "Predictions for 20 Test Cases")
